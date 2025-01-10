@@ -8,7 +8,7 @@ import java.util.Map;
 
 public class StatementPrinter {
 
-    private record Container(String name, int amount) {}
+    private record Container(String name, int amount, int audience) {}
 
     public String print(Invoice invoice, Map<String, Play> plays) {
         var totalAmount = 0;
@@ -45,9 +45,9 @@ public class StatementPrinter {
             // add extra credit for every ten comedy attendees
             if ("comedy".equals(play.type)) volumeCredits += Math.floor(perf.audience / 5);
 
-            second.add(new Container(play.name, thisAmount));
+            second.add(new Container(play.name, thisAmount, perf.audience));
             // print line for this order
-            result += String.format("  %s: %s (%s seats)\n", second.getLast().name(), frmt.format(second.getLast().amount() / 100), perf.audience);
+            result += String.format("  %s: %s (%s seats)\n", second.getLast().name(), frmt.format(second.getLast().amount() / 100), second.getLast().audience);
             totalAmount += thisAmount;
         }
         result += String.format("Amount owed is %s\n", frmt.format(totalAmount / 100));
