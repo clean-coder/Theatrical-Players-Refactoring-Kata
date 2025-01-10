@@ -13,6 +13,10 @@ public class StatementPrinter {
     public String print(Invoice invoice, Map<String, Play> plays) {
         var second = calculateInvoice(invoice, plays);
 
+        return formatInvoice(invoice, second);
+    }
+
+    private static String formatInvoice(Invoice invoice, ArrayList<Container> second) {
         var result = String.format("Statement for %s\n", invoice.customer);
         NumberFormat frmt = NumberFormat.getCurrencyInstance(Locale.US);
         for (var item : second) {
