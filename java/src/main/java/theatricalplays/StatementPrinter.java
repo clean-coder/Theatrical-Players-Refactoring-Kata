@@ -1,10 +1,14 @@
 package theatricalplays;
 
+import java.awt.*;
 import java.text.NumberFormat;
+import java.util.ArrayList;
 import java.util.Locale;
 import java.util.Map;
 
 public class StatementPrinter {
+
+    private record Container() {}
 
     public String print(Invoice invoice, Map<String, Play> plays) {
         var totalAmount = 0;
@@ -13,6 +17,7 @@ public class StatementPrinter {
 
         NumberFormat frmt = NumberFormat.getCurrencyInstance(Locale.US);
 
+        var second = new ArrayList<Container>();
         for (var perf : invoice.performances) {
             var play = plays.get(perf.playID);
             var thisAmount = 0;
