@@ -11,7 +11,6 @@ public class StatementPrinter {
     private record Container(String name, int amount, int audience) {}
 
     public String print(Invoice invoice, Map<String, Play> plays) {
-        var totalAmount = 0;
         var volumeCredits = 0;
 
         var second = new ArrayList<Container>();
@@ -43,8 +42,6 @@ public class StatementPrinter {
             if ("comedy".equals(play.type)) volumeCredits += Math.floor(perf.audience / 5);
 
             second.add(new Container(play.name, thisAmount, perf.audience));
-            // print line for this order
-            totalAmount += thisAmount;
         }
 
         var result = String.format("Statement for %s\n", invoice.customer);
@@ -52,7 +49,7 @@ public class StatementPrinter {
         for (var item : second) {
             result += String.format("  %s: %s (%s seats)\n", item.name(), frmt.format(item.amount() / 100), item.audience);
         }
-        result += String.format("Amount owed is %s\n", frmt.format(totalAmount / 100));
+        result += String.format("Amount owed is %s\n", frmt.format(second.stream().mapToInt(i -> i.amount()).sum() / 100));
         result += String.format("You earned %s credits\n", volumeCredits);
         return result;
     }
