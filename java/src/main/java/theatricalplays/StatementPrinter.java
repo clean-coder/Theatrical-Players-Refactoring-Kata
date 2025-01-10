@@ -47,8 +47,11 @@ public class StatementPrinter {
 
             second.add(new Container(play.name, thisAmount, perf.audience));
             // print line for this order
-            result += String.format("  %s: %s (%s seats)\n", second.getLast().name(), frmt.format(second.getLast().amount() / 100), second.getLast().audience);
             totalAmount += thisAmount;
+        }
+
+        for (var item : second) {
+            result += String.format("  %s: %s (%s seats)\n", item.name(), frmt.format(item.amount() / 100), item.audience);
         }
         result += String.format("Amount owed is %s\n", frmt.format(totalAmount / 100));
         result += String.format("You earned %s credits\n", volumeCredits);
