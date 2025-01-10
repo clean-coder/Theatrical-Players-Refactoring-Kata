@@ -11,7 +11,19 @@ public class StatementPrinter {
     }
 
     public String print(Invoice invoice, Map<String, Play> plays) {
+        var second = calculateInvoice(invoice, plays);
 
+        var result = String.format("Statement for %s\n", invoice.customer);
+        NumberFormat frmt = NumberFormat.getCurrencyInstance(Locale.US);
+        for (var item : second) {
+            result += String.format("  %s: %s (%s seats)\n", item.name(), frmt.format(item.amount() / 100), item.audience);
+        }
+        result += String.format("Amount owed is %s\n", frmt.format(second.stream().mapToInt(i -> i.amount()).sum() / 100));
+        result += String.format("You earned %s credits\n", second.stream().mapToInt(i -> i.volumeCredits()).sum());
+        return result;
+    }
+
+    private static ArrayList<Container> calculateInvoice(Invoice invoice, Map<String, Play> plays) {
         var second = new ArrayList<Container>();
         for (var perf : invoice.performances) {
             var play = plays.get(perf.playID);
@@ -43,15 +55,7 @@ public class StatementPrinter {
 
             second.add(new Container(play.name, thisAmount, perf.audience, volumeCredits));
         }
-
-        var result = String.format("Statement for %s\n", invoice.customer);
-        NumberFormat frmt = NumberFormat.getCurrencyInstance(Locale.US);
-        for (var item : second) {
-            result += String.format("  %s: %s (%s seats)\n", item.name(), frmt.format(item.amount() / 100), item.audience);
-        }
-        result += String.format("Amount owed is %s\n", frmt.format(second.stream().mapToInt(i -> i.amount()).sum() / 100));
-        result += String.format("You earned %s credits\n", second.stream().mapToInt(i -> i.volumeCredits()).sum());
-        return result;
+        return second;
     }
 
 }
