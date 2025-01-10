@@ -13,9 +13,6 @@ public class StatementPrinter {
     public String print(Invoice invoice, Map<String, Play> plays) {
         var totalAmount = 0;
         var volumeCredits = 0;
-        var result = String.format("Statement for %s\n", invoice.customer);
-
-        NumberFormat frmt = NumberFormat.getCurrencyInstance(Locale.US);
 
         var second = new ArrayList<Container>();
         for (var perf : invoice.performances) {
@@ -50,6 +47,8 @@ public class StatementPrinter {
             totalAmount += thisAmount;
         }
 
+        var result = String.format("Statement for %s\n", invoice.customer);
+        NumberFormat frmt = NumberFormat.getCurrencyInstance(Locale.US);
         for (var item : second) {
             result += String.format("  %s: %s (%s seats)\n", item.name(), frmt.format(item.amount() / 100), item.audience);
         }
