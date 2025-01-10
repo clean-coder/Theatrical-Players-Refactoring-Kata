@@ -12,13 +12,12 @@ public class StatementPrinter {
 
     public String print(Invoice invoice, Map<String, Play> plays) {
         var second = calculateInvoice(invoice, plays);
-
         return formatInvoice(invoice, second);
     }
 
-    private static String formatInvoice(Invoice invoice, ArrayList<Container> second) {
+    private String formatInvoice(Invoice invoice, ArrayList<Container> second) {
         var result = String.format("Statement for %s\n", invoice.customer);
-        NumberFormat frmt = NumberFormat.getCurrencyInstance(Locale.US);
+        var frmt = NumberFormat.getCurrencyInstance(Locale.US);
         for (var item : second) {
             result += String.format("  %s: %s (%s seats)\n", item.name(), frmt.format(item.amount() / 100), item.audience);
         }
@@ -27,7 +26,7 @@ public class StatementPrinter {
         return result;
     }
 
-    private static ArrayList<Container> calculateInvoice(Invoice invoice, Map<String, Play> plays) {
+    private ArrayList<Container> calculateInvoice(Invoice invoice, Map<String, Play> plays) {
         var second = new ArrayList<Container>();
         for (var perf : invoice.performances) {
             var play = plays.get(perf.playID);
